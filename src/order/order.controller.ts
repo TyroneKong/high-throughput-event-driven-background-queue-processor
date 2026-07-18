@@ -15,6 +15,10 @@ export class OrderController {
   async createOrder(@Body() dto: CreateOrderDto) {
     console.log(`📥 API Received order request for: ${dto.customerEmail}`);
 
+    if(dto.delayInSeconds && dto.delayInSeconds > 0) {
+      console.log(`⏱️  Delaying job execution by ${dto.delayInSeconds} seconds...`);
+    }
+
     // 1. Hand the payload over to the Redis queue as a named job ("process-checkout")
     // This takes less than 2 milliseconds.
     const job = await this.orderQueue.add('process-checkout', dto, {
@@ -23,6 +27,7 @@ export class OrderController {
         type: 'exponential',
         delay: 5000, // Wait 5s before first retry, then 10s, then 20s...
       },
+      delay: dto.delayInSeconds ? dto.delayInSeconds * 1000 : undefined,
     });
 
     // 2. Return an instant success acknowledgment to the client along with the Job ID
