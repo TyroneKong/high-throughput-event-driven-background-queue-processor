@@ -14,7 +14,16 @@ export class OrderProcessor extends WorkerHost {
     // Check the specific job type we dispatched from our controller
     if (job.name === 'process-checkout') {
       const { customerEmail, items, totalPrice } = job.data;
+
+      if(totalPrice > 1500){
+        console.log("[VIP Priority Account] Processing premium allocation...")
+      }
       
+if(customerEmail === 'fraud@example.com') {
+  console.warn(`🚨 [Job ${job.id}] Fraudulent order detected for ${customerEmail}!`);
+  throw new Error('Fraudulent order detected');
+}
+
       // --- Simulating Heavy Async Operations ---
       
       // Step A: Payment Gateway Settlement Latency
