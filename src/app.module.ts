@@ -1,6 +1,10 @@
 import { Module } from '@nestjs/common';
-import {BullModule} from '@nestjs/bullmq';
+import { BullModule } from '@nestjs/bullmq';
 import { OrderModule } from './order/order.module';
+import { CatalogueModule } from './catalogue/catalogue.module';
+import { CacheModule } from '@nestjs/cache-manager';
+import KeyvRedis from '@keyv/redis';
+
 
 
 @Module({
@@ -11,6 +15,11 @@ import { OrderModule } from './order/order.module';
     },
   }),
     OrderModule,
+    CatalogueModule,
+    CacheModule.register({
+      isGlobal: true,
+      store: new KeyvRedis('redis://localhost:6379')
+    }),
   ],
 })
 export class AppModule {}
