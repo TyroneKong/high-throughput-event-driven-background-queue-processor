@@ -57,4 +57,50 @@ export class CatalogueService {
       { id: 2, name: 'Ultrawide Developer Monitor', price: 699.99 },
     ];
   }
+
+// Add this map at the top of your class if not already there
+private metricsFetches = new Map<string, Promise<any>>();
+
+async getSystemMetrics(): Promise<any> {
+  const cacheKey = 'system:metrics';
+
+  // 1. FAST PATH: Check Redis
+  const cachedData = await this.cacheManager.get(cacheKey);
+  if (cachedData) {
+    return { source: 'Redis Cache', ...cachedData };
+  }
+
+  // 2. CONCURRENCY SHIELD: Mutex coalescing
+  if (this.metricsFetches.has(cacheKey)) {
+    console.log('🔒 [MUTEX] Coalescing dashboard polling request...');
+    const sharedData = await this.metricsFetches.get(cacheKey);
+    return { source: 'Mutex Coalesced', ...sharedData };
+  }
+
+  // 3. SLOW PATH: Compute raw system data
+  console.log('⚠️ [METRICS CACHE MISS] Compiling cluster analytics...');
+  const fetchPromise = (async () => {
+    // Simulate heavy infrastructure querying lag
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+
+    const computedMetrics = {
+      timestamp: new Date().toISOString(),
+      cpuUsage: Math.floor(Math.random() * (75 - 45 + 1)) + 45, // Simulates 45-75% load
+      memoryUsage: +(8.4 + Math.random() * 1.2).toFixed(1),   // Simulates 8.4-9.6 GB
+      activeWorkers: Math.floor(Math.random() * 5) + 3,
+      backgroundJobsQueued: Math.floor(Math.random() * 40) + 10,
+    };
+
+    // Cache it for a short 3-second cycle
+    await this.cacheManager.set(cacheKey, computedMetrics, 3000);
+    this.metricsFetches.delete(cacheKey);
+    return computedMetrics;
+  })();
+
+  this.metricsFetches.set(cacheKey, fetchPromise);
+  const data = await fetchPromise;
+
+  return { source: 'Primary Compute Engine (DB/OS)', ...data };
+}
+
 }
