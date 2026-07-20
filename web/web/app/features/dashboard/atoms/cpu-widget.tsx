@@ -1,4 +1,4 @@
-import SystemMetrics from '../../../core/types/metrics';
+import SystemMetrics from '@/app/core/types/metrics';
 
 const CPUWidget = ({ metrics }: { metrics: SystemMetrics | null }) => {
   return (

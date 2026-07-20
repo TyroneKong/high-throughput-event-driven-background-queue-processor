@@ -1,4 +1,4 @@
-import SystemMetrics from '../../../core/types/metrics';
+import SystemMetrics from '@/app/core/types/metrics';
 
 const ActiveWorkersWidget = ({ metrics }: { metrics: SystemMetrics | null }) => {
   return (
