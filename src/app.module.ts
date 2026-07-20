@@ -5,20 +5,19 @@ import { CatalogueModule } from './catalogue/catalogue.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import KeyvRedis from '@keyv/redis';
 
-
-
 @Module({
-  imports: [BullModule.forRoot({
-    connection: {
-      host: 'localhost',
-      port: 6379,
-    },
-  }),
+  imports: [
+    BullModule.forRoot({
+      connection: {
+        host: 'localhost',
+        port: 6379,
+      },
+    }),
     OrderModule,
     CatalogueModule,
     CacheModule.register({
       isGlobal: true,
-      store: new KeyvRedis('redis://localhost:6379')
+      store: new KeyvRedis('redis://localhost:6379'),
     }),
   ],
 })
