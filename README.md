@@ -3,7 +3,7 @@
 <img width="1553" height="563" alt="Screenshot 2026-07-20 at 9 31 41 AM" src="https://github.com/user-attachments/assets/1503a311-cd25-42b3-af3d-016b20772218" />
 
 
-A high-performance monorepo demonstrating production-grade backend scaling patterns, distributed traffic control, and a real-time telemetry dashboard. Built to simulate the high-concurrency, failure-tolerant environments found at companies like Bloomberg, Meta, and Tesla.
+A high-performance monorepo demonstrating production-grade backend scaling patterns, distributed traffic control, and a real-time telemetry dashboard. Built to simulate the high-concurrency, failure-tolerant environments.
 
 ## 🏗️ Architectural Blueprint
 
